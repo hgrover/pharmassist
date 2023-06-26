@@ -1,0 +1,12 @@
+env/
+.git/
+**/__pycache__/
+.cache/
+.pytest_cache/
+*.pyc
+tests/
+spike/
+build
+dist
+extras
+.idea/
