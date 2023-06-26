@@ -5,6 +5,7 @@ env:
 
 deps: env
 	env/bin/pip install -U pip && env/bin/pip install -r requirements.txt
+	env/bin/pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
 
 
 build:

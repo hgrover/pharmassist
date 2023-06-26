@@ -3,4 +3,5 @@ pytesseract
 pillow
 sqlalchemy
 pymongo
+openai
 paddleocr
