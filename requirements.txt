@@ -2,3 +2,4 @@ jupyterlab
 pytesseract
 pillow
 sqlalchemy
+pymongo
