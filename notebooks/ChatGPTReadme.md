@@ -1,4 +1,4 @@
-The below is an OCR scan of a prescription label. Create a python tuple with the following information; Medication name, how many pills to take in a day, how many pills to take for each occurrence, Prescription date (numbers only), Expiration date (numbers only). Provide only the tuple, no other text.
+The below is an OCR scan of a prescription label. Create a python tuple with the following information; Medication name, how many pills to take in a day (Written as "_ pills per day"), how many pills to take for each occurrence, Prescription date (numbers only), Expiration date (numbers only). Provide only the tuple, no other text.
 
 ('VCVS pharmacy', 0.9200306534767151)
 ('PATIENT', 0.9978834986686707)
