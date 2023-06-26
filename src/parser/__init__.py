@@ -15,7 +15,7 @@ import requests
 import openai
 
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
     messages = [{"role": "user", "content": prompt}]

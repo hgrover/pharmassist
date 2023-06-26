@@ -100,27 +100,27 @@ def check_medication_administration(medication_name, current_time):
             print(last_administration)
             print(next_administration)
 
-            if last_administration is None:
-                # Create last administration and next administration if they don't exist
-                last_administration = current_time
-                next_administration = current_time + datetime.timedelta(hours=24)
-
             if current_time > next_administration:
                 # Update last administration to current time if it's past the next administration
                 last_administration = current_time
                 next_administration = current_time + datetime.timedelta(hours=24)
 
-            # Update the medication record with the updated last administration and next administration
-            collection.update_one(
-                {'_id': medication['_id']},
-                {'$set': {'lastadministration': last_administration, 'nextadministration': next_administration}}
-            )
 
             # Check if the current time is within the last administration and next administration range
             if last_administration is not None and (last_administration <= current_time <= next_administration):
                 print("Duplicate administration detected.")
                 return False
             else:
+                if last_administration is None:
+                    # Create last administration and next administration if they don't exist
+                    last_administration = current_time
+                    next_administration = current_time + datetime.timedelta(hours=24)
+                    # Update the medication record with the updated last administration and next administration
+                    collection.update_one(
+                        {'_id': medication['_id']},
+                        {'$set': {'lastadministration': last_administration, 'nextadministration': next_administration}}
+                    )
+
                 print("Medication administration accepted.")
                 return True
 
