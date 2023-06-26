@@ -8,14 +8,14 @@ deps: env
 	env/bin/pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
 
 
-build:
-	docker build -t pharmassist .
+#build:
+#	docker build -t pharmassist .
+#
 
-
-deploy: build
+deploy-app:
 	docker-compose -f deploy/docker-compose.yml up -d
 
 
-destroy:
+destroy-app:
 	docker-compose -f deploy/docker-compose.yml down
 

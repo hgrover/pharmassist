@@ -26,7 +26,8 @@ def check_medication_exists(medication_name):
         collection = db['tblMedications']
 
         # Query the collection for the medication name
-        medication = collection.find_one({'MedicationName': medication_name})
+        medication = collection.find_one({'med_name.med_name': medication_name})
+        print(f"Medication name: {medication}")
 
         if medication:
             # Medication already exists in the collection
@@ -47,7 +48,7 @@ def check_medication_exists(medication_name):
 
 def insert_medication(medication_name, **params):
     # Connect to the MongoDB server
-    client = MongoClient('mongodb://username:password@localhost:27017')
+    client = MongoClient('mongodb://localhost:27017')
 
     try:
         # Access the database and collection
@@ -55,13 +56,13 @@ def insert_medication(medication_name, **params):
         collection = db['tblMedications']
 
         # Check if the medication already exists
-        existing_medication = collection.find_one({'MedicationName': medication_name})
+        existing_medication = collection.find_one({'med_name.med_name': medication_name})
         if existing_medication:
             print("Medication already exists.")
             return
 
         # Create a new medication document
-        new_medication = {'MedicationName': medication_name}
+        new_medication = {'med_name': medication_name}
         new_medication.update(params)
 
         # Insert the new medication record
@@ -80,24 +81,29 @@ def insert_medication(medication_name, **params):
 
 def check_medication_administration(medication_name, current_time):
     # Connect to the MongoDB server
-    client = MongoClient('mongodb://username:password@localhost:27017')
+    client = MongoClient('mongodb://localhost:27017')
 
     try:
         # Access the database and collection
         db = client['mydatabase']
         collection = db['tblMedications']
+        print(collection.find())
 
         # Find the medication record by name
-        medication = collection.find_one({'MedicationName': medication_name})
+        medication = collection.find_one({'med_name.med_name': medication_name})
+        print(medication)
 
         if medication:
+            print("Medication found")
             last_administration = medication.get('lastadministration')
             next_administration = medication.get('nextadministration')
+            print(last_administration)
+            print(next_administration)
 
             if last_administration is None:
                 # Create last administration and next administration if they don't exist
                 last_administration = current_time
-                next_administration = current_time + timedelta(hours=24)
+                next_administration = current_time + datetime.timedelta(hours=24)
 
             if current_time > next_administration:
                 # Update last administration to current time if it's past the next administration
@@ -111,10 +117,12 @@ def check_medication_administration(medication_name, current_time):
             )
 
             # Check if the current time is within the last administration and next administration range
-            if last_administration <= current_time <= next_administration:
-                print("Medication is within the administration range.")
+            if last_administration is not None and (last_administration <= current_time <= next_administration):
+                print("Duplicate administration detected.")
+                return False
             else:
-                print("Medication is not within the administration range.")
+                print("Medication administration accepted.")
+                return True
 
         else:
             print("Medication not found.")
@@ -133,6 +141,10 @@ def handle_event(image_path: str) -> bool:
     if not check_medication_exists(med_name):
         medication = med(med_name, dose_days, dose_pills, datep, datee)
         insert_medication(asdict(medication))
+        return True
     if not check_medication_administration(med_name, datetime.datetime.now()):
+        print("checking med administration")
         return False
+    else:
+        print("Not getting here")
     return True
